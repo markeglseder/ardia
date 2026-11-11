@@ -278,7 +278,7 @@ ac.pages.bookmarkDialog.setState({ open: null });
 s.setSelection(W, []);
 s.updateGroup("g1", { collapsed: false });
 for (const sp of Object.values(s.splits)) s.separateSplit(sp.id);
-s.updateSettings({ appearance: "dark", tabLayout: "sidebar", addressBar: "toolbar", bookmarksBar: "never" });
+s.updateSettings({ appearance: "dark", tabLayout: "sidebar", addressBar: "toolbar", bookmarksBar: "never", pillAddressBar: false, compactToolbar: false });
 if (!s.windows[W].sidebarOpen) s.toggleSidebar(W);
 s.activate("t3");
 s.updateProfile("default", { pinnedCollapsed: false });
@@ -302,6 +302,9 @@ const STATES = [
   main("dia-light-group-collapsed", `st().updateSettings({ appearance: "light" }); st().updateGroup("g1", { collapsed: true });`),
   main("dia-dark-sidebar-closed", `st().activate("t1"); st().toggleSidebar(W);`),
   main("dia-light-sidebar-closed", `st().updateSettings({ appearance: "light" }); st().activate("t1"); st().toggleSidebar(W);`),
+  main("dia-dark-pill-address-bar", `st().updateSettings({ pillAddressBar: true }); st().activate("t1"); st().toggleSidebar(W);`),
+  main("dia-dark-pill-address-bar-compact", `st().updateSettings({ pillAddressBar: true, compactToolbar: true }); st().activate("t1"); st().toggleSidebar(W);`),
+  main("dia-light-pill-address-bar", `st().updateSettings({ appearance: "light", pillAddressBar: true }); st().activate("t1"); st().toggleSidebar(W);`),
   main("dia-dark-work-profile", `st().switchProfile(W, "work");`),
   main("dia-light-work-profile", `st().updateSettings({ appearance: "light" }); st().switchProfile(W, "work");`),
   main("dia-dark-bookmarks-bar", `st().updateSettings({ bookmarksBar: "always" }); st().activate("t1");`),

@@ -9,7 +9,7 @@ import { activate } from "../../state/tabs/actions";
 import { openPanel as openWindowPanel, toggleSidebar } from "../../state/windows/actions";
 import { useIsBookmarked, useSettings, useSidebarSide, useTab, useTabLayout, useTabLive, useWindow } from "../../state/browser/hooks";
 import type { Tab } from "../../state/browser/types";
-import { Button, ContextMenuArea, Divider, FadeLabel, font, ink, space, Symbol, Text, useHover, WindowDragRegion } from "../ui";
+import { Button, capsule, ContextMenuArea, Divider, FadeLabel, font, ink, space, Symbol, Text, useHover, WindowDragRegion } from "../ui";
 import { type ToolbarGeometry } from "../window/geometry";
 import { usePage, usePages, type PageState } from "../../state/tabs/pageState";
 import { togglePopover } from "../../state/tabs/popoverDismiss";
@@ -179,11 +179,13 @@ export const ToolbarUrlField = memo(function ToolbarUrlField({ tab, palette, win
   const field = useUrlField(tab, windowId, onFocus);
   const { insecure, hovered, popover, toggleSiteControls } = field;
   const glass = useGlass();
+  const pill = useSettings((s) => s.pillAddressBar);
+  const fieldRadius = pill ? capsule(row.field) : row.fieldRadius;
 
   return (
-    <View {...field.hoverProps} style={[style, { flexDirection: "row", alignItems: "center", height: row.field, borderRadius: row.fieldRadius, backgroundColor: hovered && !glass ? palette.pill : undefined }]}>
+    <View {...field.hoverProps} style={[style, { flexDirection: "row", alignItems: "center", height: row.field, borderRadius: fieldRadius, backgroundColor: pill || (hovered && !glass) ? palette.pill : undefined }]}>
       {glass ? (
-        <GlassFill state={hovered ? "lit" : "rest"} radius={row.fieldRadius} dark={palette.background ? palette.text.startsWith(ink.white) : undefined} />
+        <GlassFill state={hovered ? "lit" : "rest"} radius={fieldRadius} dark={palette.background ? palette.text.startsWith(ink.white) : undefined} />
       ) : null}
       {insecure && (
         <Pressable onPress={toggleSiteControls} style={{ paddingLeft: LOCK.left }} tooltip="Connection is not secure">
@@ -209,7 +211,7 @@ export const ToolbarUrlField = memo(function ToolbarUrlField({ tab, palette, win
           </View>
         </Pressable>
       </ContextMenuArea>
-      <FieldButtons tab={tab} palette={palette} onFocus={onFocus} popover={popover} toggleSiteControls={toggleSiteControls}>
+      <FieldButtons tab={tab} palette={palette} onFocus={onFocus} popover={popover} toggleSiteControls={toggleSiteControls} endInset={pill ? PILL_END_INSET : undefined}>
         {hovered && (
           <>
             <PageButton tab={tab} palette={palette} windowId={windowId} />
@@ -271,6 +273,7 @@ export const SidebarUrlField = memo(function SidebarUrlField({ tab, palette, win
 });
 
 const HOST_FULL = { flexShrink: 0, maxWidth: "100%" } as const;
+const PILL_END_INSET = space.xs + 3;
 const SHRINK = { flexShrink: 1 } as const;
 
 type PageButtonProps = { tab: ToolbarTab; palette: ToolbarPalette; windowId: string };
@@ -299,6 +302,7 @@ function FieldButtons({
   popover,
   toggleSiteControls,
   accessory,
+  endInset = space.xs,
   children,
 }: {
   tab: ToolbarTab;
@@ -307,12 +311,13 @@ function FieldButtons({
   popover: string | null;
   toggleSiteControls: () => void;
   accessory?: ReactNode;
+  endInset?: number;
   children: ReactNode;
 }) {
   const popups = usePage(tab.id, (p) => p.popups.length);
   const capture = usePage(tab.id, (p) => p.mediaAccess);
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", paddingRight: space.xs }}>
+    <View style={{ flexDirection: "row", alignItems: "center", paddingRight: endInset }}>
       {children}
       {capture && <CaptureIndicator camera={capture.camera} microphone={capture.microphone} screen={capture.screen} onPress={toggleSiteControls} />}
       <TranslateButton tabId={tab.id} palette={palette} onFocus={onFocus} />

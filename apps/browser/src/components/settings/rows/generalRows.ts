@@ -327,6 +327,11 @@ export const generalRows = {
           description: "A 28 pt toolbar instead of Dia's 41 pt, so the page gets more height and a 16:9 video can fill a maximized window. For the address bar in the toolbar and for tabs at the top.",
           keywords: ["toolbar height", "smaller toolbar", "thin toolbar", "slim", "dense", "helium", "video", "16:9", "black bars", "url bar"],
         },
+        pillAddressBar: {
+          title: "Pill-shaped address bar",
+          description: "Rounds the toolbar's address bar into a capsule that keeps its fill when you're not hovering it.",
+          keywords: ["pill", "capsule", "rounded", "round", "shape", "fill", "url bar", "address", "orion", "safari"],
+        },
       },
     },
     {
